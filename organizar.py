@@ -2,7 +2,7 @@ import os
 import shutil
 
 # --- ENTORNO DE PRUEBAS EN CODESPACES ---
-downloads_path = 'descargas_prueba'
+downloads_path = '/data/data/com.termux/files/home/storage/shared/Download'
 
 # --- ESTRUCTURA DE CARPETAS ---
 # Definimos las carpetas principales. Las subcarpetas se crearán dinámicamente.
