@@ -1,72 +1,66 @@
 import os
 import shutil
 
-# --- ENTORNO DE PRUEBAS EN CODESPACES ---
+# --- RUTA REAL PARA ANDROID ---
 downloads_path = '/data/data/com.termux/files/home/storage/shared/Download'
 
-# --- ESTRUCTURA DE CARPETAS ---
-# Definimos las carpetas principales. Las subcarpetas se crearán dinámicamente.
+# --- ESTRUCTURA DE CARPETAS MEJORADA ---
 carpetas_principales = {
-    'Camara Xiaomi': [],
+    'Camara y WhatsApp': [], # Un solo lugar para fotos/videos del teléfono
     'Imagenes': ['.jpg', '.jpeg', '.png', '.gif', '.webp'],
-    'Videos': ['.mp4', '.mov', '.avi', '.mkv'],
-    'Documentos': ['.pdf', '.docx', '.txt'],
+    'Videos': ['.mp4', '.mov', '.avi', '.mkv', '.webm'],
+    'Documentos': ['.pdf', '.docx', '.txt', '.xlsx', '.xlsm', '.csv'],
+    'Musica': ['.mp3', '.wav', '.opus', '.m4a'],
     'Comprimidos': ['.zip', '.rar'],
-    'Apps': ['.apk'],
+    'Apps y Ejecutables': ['.apk', '.exe', '.zip'], # El .zip está aquí por si son proyectos
     'Otros': []
 }
 
-# --- LÓGICA DEL SCRIPT MEJORADA ---
-
-# Asegurarse de que la carpeta de prueba exista
-if not os.path.exists(downloads_path):
-    os.makedirs(downloads_path)
-    print(f"Carpeta de prueba creada en: '{downloads_path}'")
+# --- LÓGICA DEL SCRIPT FINAL ---
 
 # Crear todas las carpetas principales si no existen
-print("Creando estructura de carpetas principal...")
+print("Verificando estructura de carpetas...")
 for carpeta in carpetas_principales.keys():
     ruta_carpeta = os.path.join(downloads_path, carpeta)
     if not os.path.exists(ruta_carpeta):
         os.makedirs(ruta_carpeta)
 
-# --- NUEVA SECCIÓN: Crear las subcarpetas dentro de 'Camara Xiaomi' ---
-ruta_camara_xiaomi = os.path.join(downloads_path, 'Camara Xiaomi')
+# Crear subcarpetas para fotos y videos de la cámara/whatsapp
+ruta_camara_whatsapp = os.path.join(downloads_path, 'Camara y WhatsApp')
 subcarpetas_camara = ['Fotos', 'Videos']
 for subcarpeta in subcarpetas_camara:
-    ruta_subcarpeta = os.path.join(ruta_camara_xiaomi, subcarpeta)
+    ruta_subcarpeta = os.path.join(ruta_camara_whatsapp, subcarpeta)
     if not os.path.exists(ruta_subcarpeta):
         os.makedirs(ruta_subcarpeta)
-        print(f" -> Subcarpeta '{subcarpeta}' creada en 'Camara Xiaomi'")
 
-print("\nIniciando organización de archivos avanzada...")
+print("\n✅ ¡Todo listo! Iniciando organización de archivos...")
 
-# Revisar cada archivo en la carpeta de Descargas de prueba.
+# Revisar cada archivo en la carpeta de Descargas.
 for nombre_archivo in os.listdir(downloads_path):
     ruta_archivo_origen = os.path.join(downloads_path, nombre_archivo)
 
     if os.path.isfile(ruta_archivo_origen):
         
-        # --- LÓGICA ANIDADA PARA LA CÁMARA ---
-        # 1. ¿Es una foto de la cámara?
-        if nombre_archivo.startswith('IMG_'):
-            ruta_destino = os.path.join(ruta_camara_xiaomi, 'Fotos')
+        # --- REGLAS MEJORADAS PARA FOTOS Y VIDEOS DEL TELÉFONO ---
+        # Ahora reconoce IMG_ (cámara) y IMG- (WhatsApp)
+        if nombre_archivo.startswith('IMG_') or nombre_archivo.startswith('IMG-'):
+            ruta_destino = os.path.join(ruta_camara_whatsapp, 'Fotos')
             shutil.move(ruta_archivo_origen, ruta_destino)
-            print(f"📸 Moviendo foto de cámara '{nombre_archivo}' a 'Camara Xiaomi/Fotos'")
-            continue # Pasa al siguiente archivo
+            print(f"📸 Moviendo foto '{nombre_archivo}' a 'Camara y WhatsApp/Fotos'")
+            continue
 
-        # 2. ¿Es un video de la cámara?
-        if nombre_archivo.startswith('VID_'):
-            ruta_destino = os.path.join(ruta_camara_xiaomi, 'Videos')
+        # Ahora reconoce VID_ (cámara) y VID- (WhatsApp)
+        if nombre_archivo.startswith('VID_') or nombre_archivo.startswith('VID-'):
+            ruta_destino = os.path.join(ruta_camara_whatsapp, 'Videos')
             shutil.move(ruta_archivo_origen, ruta_destino)
-            print(f"📹 Moviendo video de cámara '{nombre_archivo}' a 'Camara Xiaomi/Videos'")
-            continue # Pasa al siguiente archivo
+            print(f"📹 Moviendo video '{nombre_archivo}' a 'Camara y WhatsApp/Videos'")
+            continue
 
-        # --- LÓGICA PARA EL RESTO DE ARCHIVOS (si no era de la cámara) ---
+        # --- LÓGICA PARA EL RESTO DE ARCHIVOS ---
         extension = os.path.splitext(nombre_archivo)[1].lower()
         movido = False
         for carpeta_destino, extensiones_validas in carpetas_principales.items():
-            if carpeta_destino == 'Camara Xiaomi': # Evitar que algo más vaya a la raíz de esta carpeta
+            if carpeta_destino == 'Camara y WhatsApp':
                 continue
             
             if extension in extensiones_validas:
@@ -76,10 +70,9 @@ for nombre_archivo in os.listdir(downloads_path):
                 movido = True
                 break
         
-        # 4. Si no coincidió con nada, va a 'Otros'.
         if not movido:
             ruta_otros = os.path.join(downloads_path, 'Otros')
             shutil.move(ruta_archivo_origen, ruta_otros)
             print(f" -> Moviendo '{nombre_archivo}' a 'Otros'")
 
-print("\n¡Organización completada con éxito! ✅")
+print("\n¡Organización completada con éxito! Revisa tu carpeta de Descargas. ✨")
