@@ -1,0 +1,17 @@
+{
+  "name": "carpetas",
+  "version": "1.0.0",
+  "description": "Un script para organizar archivos de descargas en Android.",
+  "main": "organizar.py",
+  "scripts": {
+    "start": "python3 organizar.py && cat /data/data/com.termux/files/home/storage/shared/Download/organizador_log.txt"
+  },
+  "keywords": [
+    "python",
+    "automation",
+    "organizer",
+    "termux"
+  ],
+  "author": "Maikimastermind",
+  "license": "ISC"
+}
